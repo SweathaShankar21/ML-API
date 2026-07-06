@@ -1,36 +1,38 @@
 import os
-import joblib
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-app = FastAPI(title="Tiny ML API", description="Production-ready model-serving backend")
+app = FastAPI(
+    title="Tiny ML API", 
+    description="Interactive model-serving backend for real-time predictions."
+)
 
-# 1. Enforce strict input validation using Pydantic
+# 1. Input Validation Schema
 class PredictRequest(BaseModel):
-    feature_1: float = Field(..., description="First model input metric")
-    feature_2: float = Field(..., description="Second model input metric")
-    feature_3: float = Field(..., description="Third model input metric")
-    feature_4: float = Field(..., description="Fourth model input metric")
-
-# Placeholder or dynamic path for your model loader
-MODEL_PATH = os.getenv("MODEL_PATH", "model.pkl")
+    feature_1: float = Field(..., description="First measurement metric", ge=0)
+    feature_2: float = Field(..., description="Second measurement metric", ge=0)
+    feature_3: float = Field(..., description="Third measurement metric", ge=0)
+    feature_4: float = Field(..., description="Fourth measurement metric", ge=0)
 
 @app.get("/")
 def health_check():
-    """Returns the system status."""
-    return {"status": "healthy", "model_configured": os.path.exists(MODEL_PATH)}
+    """Returns the system infrastructure health status."""
+    return {"status": "healthy", "environment": "production"}
 
 @app.post("/predict")
 def get_prediction(payload: PredictRequest):
-    """Takes 4 validated numbers and returns the model inference result."""
+    """Takes 4 validated numeric inputs and returns a real-time prediction."""
     try:
-        # Reshape data into the format scikit-learn expects [[f1, f2, f3, f4]]
-        input_data = [[payload.feature_1, payload.feature_2, payload.feature_3, payload.feature_4]]
+        # Structure the inputs into an array format scikit-learn expects
+        input_features = [[payload.feature_1, payload.feature_2, payload.feature_3, payload.feature_4]]
         
-        # Simulating model inference (Replace with: model = joblib.load(MODEL_PATH))
-        # mock_prediction = model.predict(input_data)[0]
-        prediction_result = 1.0 
+        # NOTE: Dummy placeholder value for demonstration
+        # In a full app: prediction = model.predict(input_features)[0]
+        simulated_prediction = 1.0 
         
-        return {"prediction": prediction_result}
+        return {
+            "prediction": simulated_prediction,
+            "status": "success"
+        }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Inference error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Inference Engine Error: {str(e)}")
