@@ -3,8 +3,9 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 app = FastAPI(
-    title="Tiny ML API", 
-    description="Interactive model-serving backend for real-time predictions."
+    title="Sweatha Shankar's ML API", 
+    description="Production-ready model-serving backend engine. Created by Sweatha Shankar.",
+    version="1.0.0"
 )
 
 # 1. Input Validation Schema
