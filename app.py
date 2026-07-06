@@ -10,7 +10,7 @@ model.fit(data.data, data.target)
 
 @app.get("/")
 def home():
-    return {"message": "Tiny ML API is running", "status": "ok"}
+    return {"message": "Tiny ML API is running v2", "status": "ok"}
 
 @app.post("/predict")
 def predict(features: list[float]):
